@@ -25,6 +25,9 @@
     "cordova-plugin-splashscreen": {
       "PACKAGE_NAME": "io.cordova.myapp998213"
     },
+    "cordova-plugin-geolocation": {
+      "PACKAGE_NAME": "io.cordova.myapp998213"
+    },
     "cordova-plugin-googlemaps": {
       "API_KEY_FOR_ANDROID": "AIzaSyAIeo8REwuTwORgvyoLkqbTdVvxeId0S4o",
       "PACKAGE_NAME": "io.cordova.myapp998213"

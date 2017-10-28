@@ -1,5 +1,5 @@
 {
-  "name": "io.cordova.myapp998213",
+  "name": "io.cordova.GMapsCluster",
   "author": "",
   "homepage": "",
   "private": true,
@@ -20,11 +20,14 @@
     "@angular/platform-browser": "2.2.1",
     "@angular/platform-browser-dynamic": "2.2.1",
     "@angular/platform-server": "2.2.1",
+    "@ionic-native/core": "^4.3.2",
     "@ionic-native/google-maps": "^4.3.2",
     "@ionic/storage": "1.1.7",
     "cordova-android": "^6.3.0",
+    "cordova-plugin-compat": "^1.2.0",
     "cordova-plugin-console": "^1.0.5",
     "cordova-plugin-device": "^1.1.4",
+    "cordova-plugin-geolocation": "^2.4.3",
     "cordova-plugin-googlemaps": "^2.0.11",
     "cordova-plugin-splashscreen": "^4.0.3",
     "cordova-plugin-statusbar": "^2.2.1",
@@ -39,6 +42,7 @@
   },
   "devDependencies": {
     "@ionic/app-scripts": "1.1.0",
+    "ionic": "3.15.2",
     "typescript": "2.0.9"
   },
   "description": "Ionic2Blank: An Ionic project",
@@ -64,6 +68,7 @@
       "cordova-plugin-statusbar": {},
       "cordova-plugin-device": {},
       "cordova-plugin-splashscreen": {},
+      "cordova-plugin-geolocation": {},
       "cordova-plugin-googlemaps": {
         "API_KEY_FOR_ANDROID": "AIzaSyAIeo8REwuTwORgvyoLkqbTdVvxeId0S4o"
       }

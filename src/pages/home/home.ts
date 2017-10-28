@@ -5,9 +5,10 @@ import {
   GoogleMapOptions,
   CameraPosition,
   MarkerOptions,
-  Marker
+  Marker,
+  HtmlInfoWindow
 } from '@ionic-native/google-maps';
-import { Component } from "@angular/core/";
+import { Component, ViewChild, ElementRef } from "@angular/core/";
 import { Platform } from 'ionic-angular';
 
 @Component({
@@ -18,27 +19,26 @@ import { Platform } from 'ionic-angular';
 export class HomePage {
   map: GoogleMap;
   mapElement: HTMLElement;
+
   constructor(private googleMaps: GoogleMaps, public platform: Platform) {
     platform.ready().then(() => {
       this.loadMap();
     });
   }
 
+
   loadMap() {
-    this.mapElement = document.getElementById('map');
+    this.mapElement = document.getElementById('map_canvas');
+
     let mapOptions: GoogleMapOptions = {
-      camera: {
-        target: {
-          lat: 21.382314,
-          lng: -157.933097
-        },
-        zoom: 18,
-        tilt: 30
+      'camera': {
+        'target': this.dummyData()[0].position,
+        'zoom': 12
       }
     };
+
     this.map = this.googleMaps.create(this.mapElement, mapOptions);
 
-    // Wait the MAP_READY before using any methods.
     this.map.one(GoogleMapsEvent.MAP_READY).then(() => {
       console.log('Map is ready!');
       this.addCluster(this.dummyData());
@@ -46,19 +46,57 @@ export class HomePage {
   }
 
   addCluster(data) {
-    var opt = {
-      //debug: true,
-      //maxZoomLevel: 5,
+    var clusterOption = {
+      boundsDraw: false,
+      maxZoomLevel: 12,
       markers: data,
       icons: [
-        { min: 2, max: 100, url: "./img/blue.png", anchor: { x: 16, y: 16 } },
-        { min: 100, max: 1000, url: "./img/yellow.png", anchor: { x: 16, y: 16 } },
-        { min: 1000, max: 2000, url: "./img/purple.png", anchor: { x: 24, y: 24 } },
-        { min: 2000, url: "./img/red.png", anchor: { x: 32, y: 32 } },
+        {
+          min: 3,
+          url: "./assets/large.png",
+          anchor: { x: 16, y: 16 },
+          label: {
+            color: "white",
+            bold: true,
+            fontSize: 14
+          },
+          size: {
+            width: 37,
+            height: 37
+          }
+        }
       ]
     }
-    this.map.addMarkerCluster(opt).then((markerCluster) => {
-      console.log('marker clicked');
+    this.map.addMarkerCluster(clusterOption).then((markerCluster) => {
+      console.log(markerCluster);
+        //-----------------------------------------------------------------------
+        // Display the resolution (in order to understand the marker cluster)
+        //-----------------------------------------------------------------------
+        markerCluster.on("resolution_changed", function (prev, newResolution) {
+          var self = this;
+          this.label.innerHTML = "&lt;b&gt;zoom = " + self.get("zoom").toFixed(0) + ", resolution = " + self.get("resolution") + "&lt;/b&gt;";
+        });
+        markerCluster.trigger("resolution_changed");
+
+        var htmlInfoWnd = new HtmlInfoWindow();
+        markerCluster.on(GoogleMapsEvent.MARKER_CLICK, function (position, marker) {
+          console.log("MARKER_CLICK");
+
+          var html = [
+            "&lt;div style='width:250px;min-height:100px'&gt;",
+            "&lt;img src='img/starbucks_logo.gif' align='right'&gt;",
+            "&lt;strong&gt;" + (marker.get("title") || marker.get("name")) + "&lt;/strong&gt;"
+          ];
+          if (marker.get("address")) {
+            html.push("&lt;div style='font-size:0.8em;'&gt;" + marker.get("address") + "&lt;/div&gt;");
+          }
+          if (marker.get("phone")) {
+            html.push("&lt;a href='tel:" + marker.get("phone") + "' style='font-size:0.8em;color:blue;'&gt;Tel: " + marker.get("phone") + "&lt;/div&gt;");
+          }
+          html.push("&lt;/div&gt;");
+          htmlInfoWnd.setContent(html.join(""));
+          htmlInfoWnd.open(marker);
+        });
     });
   }
 
